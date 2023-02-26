@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:events_attendance/generated/l10n.dart';
 import 'package:events_attendance/presentation/constants/app_icons.dart';
