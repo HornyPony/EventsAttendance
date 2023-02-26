@@ -69,6 +69,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Events\nAttendance`
+  String get app_title {
+    return Intl.message(
+      'Events\nAttendance',
+      name: 'app_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `BlackBoard Email`
+  String get auth_email {
+    return Intl.message(
+      'BlackBoard Email',
+      name: 'auth_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `BlackBoard Password`
+  String get auth_password {
+    return Intl.message(
+      'BlackBoard Password',
+      name: 'auth_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign In`
+  String get sign_in {
+    return Intl.message(
+      'Sign In',
+      name: 'sign_in',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:events_attendance/generated/l10n.dart';
-import 'package:events_attendance/presentation/constants/app_icons.dart';
-import 'package:events_attendance/presentation/constants/theme.dart';
+import 'package:events_attendance/presentation/utils/app_icons.dart';
+import 'package:events_attendance/presentation/utils/theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';

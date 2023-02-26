@@ -1,4 +1,8 @@
 {
   "events": "Events",
-  "profile": "Profile"
+  "profile": "Profile",
+  "app_title": "Events\nAttendance",
+  "auth_email": "BlackBoard Email",
+  "auth_password": "BlackBoard Password",
+  "sign_in": "Sign In"
 }
