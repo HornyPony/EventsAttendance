@@ -94,11 +94,13 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Column(
           children: [
+            SizedBox(
+              height: 8.h,
+            ),
             Form(
               key: _emailForm,
               child: EmailTextField(
@@ -126,15 +128,17 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
             ),
           ],
         ),
-        ActionBtn(
-          onTap: () {},
-          verticalPadding: 14,
-          btnText: S.of(context).sign_in,
-          prefixIcon: SvgPicture.asset(
-            AppIcons.signIn,
-            width: 14.w,
-            height: 14.h,
-            color: Colors.white,
+        SafeArea(
+          child: ActionBtn(
+            onTap: () {},
+            verticalPadding: 14,
+            btnText: S.of(context).sign_in,
+            prefixIcon: SvgPicture.asset(
+              AppIcons.signIn,
+              width: 14.w,
+              height: 14.h,
+              color: Colors.white,
+            ),
           ),
         ),
       ],
