@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:events_attendance/generated/l10n.dart';
 import 'package:events_attendance/presentation/global_widgets/action_btn.dart';
+import 'package:events_attendance/presentation/router/router.gr.dart';
 
 import 'package:events_attendance/presentation/screens/login/widgets/auth_text_fields.dart';
 import 'package:events_attendance/presentation/utils/app_icons.dart';
@@ -130,7 +132,9 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
         ),
         SafeArea(
           child: ActionBtn(
-            onTap: () {},
+            onTap: () {
+              AutoRouter.of(context).push(const HomeRoute());
+            },
             verticalPadding: 14,
             btnText: S.of(context).sign_in,
             prefixIcon: SvgPicture.asset(

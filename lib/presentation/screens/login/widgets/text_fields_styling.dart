@@ -1,6 +1,10 @@
+import 'package:events_attendance/generated/l10n.dart';
+import 'package:events_attendance/presentation/global_widgets/custom_button.dart';
+import 'package:events_attendance/presentation/utils/app_icons.dart';
 import 'package:events_attendance/presentation/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 abstract class TextFieldsStyling {
   static InputDecoration emailPromocodeFieldDecoration({
@@ -54,6 +58,53 @@ abstract class TextFieldsStyling {
       focusedBorder: InputBorder.none,
       errorBorder: InputBorder.none,
       focusedErrorBorder: InputBorder.none,
+    );
+  }
+
+  static InputDecoration searchFieldDecoration({
+    required BuildContext context,
+    required TextEditingController controller,
+    required VoidCallback onClearPressed,
+  }) {
+    return InputDecoration(
+      filled: true,
+      isDense: true,
+      fillColor: AppTheme.searchTextFieldColor,
+      hintText: S.of(context).search_events_hint_text,
+      hintStyle: Theme.of(context).textTheme.displayLarge!.copyWith(
+        color: AppTheme.searchTextFieldIconTextColor,
+        overflow: TextOverflow.clip,
+        fontSize: 14.sp,
+      ),
+
+      suffixIcon: controller.text.isNotEmpty
+          ? CustomButton(
+        onTap: () {
+          controller.clear();
+          onClearPressed();
+        },
+        child: SvgPicture.asset(
+          AppIcons.closeCross,
+          width: 10.33.w,
+          height: 10.33.h,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      )
+          : null,
+      suffixIconConstraints: BoxConstraints(
+        minWidth: 40.w,
+        minHeight: 10.33.h,
+      ),
+      contentPadding: EdgeInsets.only(
+        top: 10.h,
+        bottom: 10.h,
+        left: 10.w,
+        //horizontal: 18.w,
+      ),
+      enabledBorder: _searchFieldBorder(),
+      focusedErrorBorder: _searchFieldBorder(),
+      focusedBorder: _searchFieldBorder(),
+      errorBorder: _searchFieldBorder(),
     );
   }
 

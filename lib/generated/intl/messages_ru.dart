@@ -29,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("BlackBoard пароль"),
         "events": MessageLookupByLibrary.simpleMessage("Мероприятия"),
         "profile": MessageLookupByLibrary.simpleMessage("Профиль"),
+        "search_events_hint_text": MessageLookupByLibrary.simpleMessage(
+            "Поиск по названию, месту или дате мероприятия"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Войти")
       };
 }

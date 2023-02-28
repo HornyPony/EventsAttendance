@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:auto_route/empty_router_widgets.dart';
 import 'package:events_attendance/presentation/navigator.dart';
+import 'package:events_attendance/presentation/router/router.gr.dart';
 import 'package:events_attendance/presentation/screens/event_single/event_single_screen.dart';
 import 'package:events_attendance/presentation/screens/events/events_screen.dart';
 import 'package:events_attendance/presentation/screens/home/home_screen.dart';
@@ -16,30 +17,33 @@ import 'package:events_attendance/presentation/screens/profile/profile_screen.da
       path: '/',
       page: LoginScreen,
       initial: true,
+    ),
+    AutoRoute(
+      path: 'home_screen',
+      page: HomeScreen,
       children: [
         AutoRoute(
-          path: 'homeScreen',
-          page: HomeScreen,
+          path: 'events',
+          name: 'EventsRouter',
+          page: EmptyRouterPage,
           children: [
             AutoRoute(
-              path: 'events',
+              path: '',
               page: EventsScreen,
               meta: {'noResizeToAvoidBottomInset': true},
-              children: [
-                AutoRoute(
-                  path: 'eventSingle',
-                  page: EventSingleScreen,
-                ),
-              ],
             ),
             AutoRoute(
-              path: 'profile',
-              page: ProfileScreen,
-              meta: {'noResizeToAvoidBottomInset': true},
+              path: 'event_single',
+              page: EventSingleScreen,
             ),
           ],
         ),
-      ]
+        AutoRoute(
+          path: 'profile',
+          page: ProfileScreen,
+          meta: {'noResizeToAvoidBottomInset': true},
+        ),
+      ],
     ),
   ],
 )

@@ -4,5 +4,6 @@
   "app_title": "Посещение\nмероприятий",
   "auth_email": "BlackBoard почта",
   "auth_password": "BlackBoard пароль",
-  "sign_in": "Войти"
+  "sign_in": "Войти",
+  "search_events_hint_text": "Поиск по названию, месту или дате мероприятия"
 }

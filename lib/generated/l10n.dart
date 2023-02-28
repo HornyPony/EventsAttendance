@@ -109,6 +109,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Search by name, place or date`
+  String get search_events_hint_text {
+    return Intl.message(
+      'Search by name, place or date',
+      name: 'search_events_hint_text',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
               MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.2)),
       child: AutoTabsScaffold(
         routes: const [
-          EventsRoute(),
+          EventsRouter(),
           ProfileRoute()
         ],
         resizeToAvoidBottomInset: noResizeToAvoidBottomInset,
