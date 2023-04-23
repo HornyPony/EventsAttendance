@@ -1,10 +1,16 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:events_attendance/domain/model/user.dart';
+import 'package:events_attendance/domain/model/user_shared_preferences.dart';
 import 'package:events_attendance/generated/l10n.dart';
+import 'package:events_attendance/internal/dependencies/firebase_user_repository_module.dart';
+import 'package:events_attendance/internal/dependencies/get_user_repository_module.dart';
 import 'package:events_attendance/presentation/global_widgets/action_btn.dart';
+import 'package:events_attendance/presentation/global_widgets/expanded_scroll_view.dart';
+import 'package:events_attendance/presentation/global_widgets/input_field_error_text.dart';
 import 'package:events_attendance/presentation/router/router.gr.dart';
-
 import 'package:events_attendance/presentation/screens/login/widgets/auth_text_fields.dart';
 import 'package:events_attendance/presentation/utils/app_icons.dart';
+import 'package:events_attendance/presentation/utils/constants.dart';
 import 'package:events_attendance/presentation/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,52 +24,56 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return KeyboardDismisser(
       child: Scaffold(
-        body: Column(
-          children: [
-            Flexible(
-              flex: 4,
-              child: Container(
-                color: Theme.of(context).primaryColor,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 48.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SvgPicture.asset(
-                        AppIcons.logo,
-                        color: Colors.white,
-                        width: 100.w,
-                        height: 100.h,
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Text(
-                        S.of(context).app_title,
-                        textAlign: TextAlign.center,
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  fontSize: 24.sp,
-                                  color: Colors.white,
-                                ),
-                      ),
-                    ],
+        body: CustomExpandedScrollView.customScrollView(
+          child: Column(
+            children: [
+              Flexible(
+                flex: 4,
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 48.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.logo,
+                          color: Colors.white,
+                          width: 100.w,
+                          height: 100.h,
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Text(
+                          S.of(context).app_title,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                fontSize: 24.sp,
+                                color: Colors.white,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Flexible(
-              flex: 2,
-              child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(
-                  horizontal: CustomDimensions.screenHorizontalPadding,
+              Flexible(
+                flex: 3,
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: CustomDimensions.screenHorizontalPadding,
+                  ),
+                  child: const _AuthFieldsPart(),
                 ),
-                child: const _AuthFieldsPart(),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -83,6 +93,7 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
 
   final _emailForm = GlobalKey<FormState>();
   final _passwordForm = GlobalKey<FormState>();
+  bool _isValidLoginPassword = true;
 
   bool _isShowPassword = false;
 
@@ -96,44 +107,85 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Column(
-          children: [
-            SizedBox(
-              height: 8.h,
-            ),
-            Form(
-              key: _emailForm,
-              child: EmailTextField(
-                controller: _usernameController,
-                isValid: true,
-                isShowErrorText: false,
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 8.h,
               ),
-            ),
-            SizedBox(
-              height: 8.h,
-            ),
-            Form(
-              key: _passwordForm,
-              child: PasswordTextField(
-                controller: _passwordController,
-                isShowPassword: _isShowPassword,
-                isValid: true,
-                toggleVisibility: _togglePasswordVisibility,
-                validator: (_) {
-                  return 'true'; /*Validators.passwordValidator(
-                            _passwordController.text,
-                          );*/
-                },
+              Form(
+                key: _emailForm,
+                child: EmailTextField(
+                  controller: _usernameController,
+                  isValid: _isValidLoginPassword,
+                  isShowErrorText: false,
+                ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 8.h,
+              ),
+              Form(
+                key: _passwordForm,
+                child: PasswordTextField(
+                  controller: _passwordController,
+                  isShowPassword: _isShowPassword,
+                  isValid: _isValidLoginPassword,
+                  toggleVisibility: _togglePasswordVisibility,
+                ),
+              ),
+              if (!_isValidLoginPassword)
+                InputFieldErrorText(
+                  errorText: S.of(context).auth_error,
+                  isBottomPadding: false,
+                ),
+            ],
+          ),
         ),
         SafeArea(
           child: ActionBtn(
-            onTap: () {
-              AutoRouter.of(context).push(const HomeRoute());
+            onTap: () async {
+              final String login = _getTrimmedString(_usernameController.text);
+              final String password =
+                  _getTrimmedString(_passwordController.text);
+
+              final User user =
+                  await GetUserRepositoryModule.getUserRepository().getUserInfo(
+                login: login,
+                password: password,
+              );
+
+              if (user.fio == Constants.nullStringValue) {
+                setState(() {
+                  _isValidLoginPassword = false;
+                });
+              } else {
+                bool isUserExists =
+                    await FirebaseUserRepositoryModule.getUserRepository()
+                        .getIsUserExists(login: login);
+
+                if (!isUserExists) {
+                  await FirebaseUserRepositoryModule.getUserRepository()
+                      .createFirebaseUser(login: login, deviceToken: '1');
+                }
+                UserSharedPreferences.setUserLogin(login);
+                UserSharedPreferences.setUserPassword(password);
+
+                if (context.mounted)
+                  AutoRouter.of(context).replace(const HomeRoute());
+              }
+
+              /*var deviceInfo = DeviceInfoPlugin();
+              if (Platform.isIOS) { // import 'dart:io'
+                var iosDeviceInfo = await deviceInfo.iosInfo;
+                print(iosDeviceInfo.identifierForVendor); // unique ID on iOS
+              } else if(Platform.isAndroid) {
+                var androidDeviceInfo = await deviceInfo.androidInfo;
+                print(androidDeviceInfo.id); // unique ID on Android
+              }*/
             },
             verticalPadding: 14,
             btnText: S.of(context).sign_in,
@@ -147,6 +199,10 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
         ),
       ],
     );
+  }
+
+  String _getTrimmedString(String text) {
+    return text.trim();
   }
 
   void _togglePasswordVisibility() {

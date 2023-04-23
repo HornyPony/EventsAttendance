@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -80,10 +81,10 @@ class S {
     );
   }
 
-  /// `BlackBoard Email`
+  /// `BlackBoard Login`
   String get auth_email {
     return Intl.message(
-      'BlackBoard Email',
+      'BlackBoard Login',
       name: 'auth_email',
       desc: '',
       args: [],
@@ -115,6 +116,16 @@ class S {
     return Intl.message(
       'Search by name, place or date',
       name: 'search_events_hint_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username or password entered incorrectly`
+  String get auth_error {
+    return Intl.message(
+      'Username or password entered incorrectly',
+      name: 'auth_error',
       desc: '',
       args: [],
     );

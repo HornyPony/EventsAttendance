@@ -1,3 +1,5 @@
+import 'package:events_attendance/domain/model/event_item.dart';
+import 'package:events_attendance/internal/dependencies/events_repository_module.dart';
 import 'package:events_attendance/presentation/global_widgets/custom_appbars.dart';
 import 'package:events_attendance/presentation/screens/events/parts/event_container.dart';
 import 'package:events_attendance/presentation/screens/login/widgets/text_fields_styling.dart';
@@ -15,10 +17,19 @@ class EventsScreen extends StatefulWidget {
 
 class _EventsScreenState extends State<EventsScreen> {
   final TextEditingController _searchEventsController = TextEditingController();
+  late Stream<List<EventItem>> eventsStream;
+
+  @override
+  void initState() {
+    eventsStream = EventsRepositoryModule.eventsRepository()
+        .readEvents(searchFieldText: _searchEventsController.text);
+    super.initState();
+  }
 
   @override
   void dispose() {
     _searchEventsController.dispose();
+
     super.dispose();
   }
 
@@ -56,13 +67,31 @@ class _EventsScreenState extends State<EventsScreen> {
                 height: 6.h,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: 10,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: CustomDimensions.screenHorizontalPadding,
-                  ),
-                  itemBuilder: (context, index) {
-                    return const EventContainer();
+                child: StreamBuilder<List<EventItem>>(
+                  stream: eventsStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final List<EventItem> events = snapshot.data!;
+
+                      return ListView.builder(
+                        itemCount: events.length,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: CustomDimensions.screenHorizontalPadding,
+                        ),
+                        itemBuilder: (context, index) {
+                          EventItem event = events[index];
+
+                          return EventContainer(
+                            eventItem: event,
+                          );
+                        },
+                      );
+                    } else {
+
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                   },
                 ),
               ),
@@ -75,32 +104,21 @@ class _EventsScreenState extends State<EventsScreen> {
 
   void _onSearchFieldChanged() {
     setState(() {
-      if (_searchEventsController.text.isNotEmpty) {
-        /* locator.get<ScreenerCompaniesState>().notEmptySearchCompanies(
-          searchText: _getSearchText(),
-          isNeedSaveSearch: false,
-          orderBy: _getSortingType());*/
-      } else {
-        /*locator
-          .get<ScreenerCompaniesState>()
-          .emptySearchCompanies(orderBy: _getSortingType());*/
-      }
+      eventsStream = EventsRepositoryModule.eventsRepository()
+          .readEvents(searchFieldText: _searchEventsController.text);
       //_scrollController.jumpTo(0);
     });
   }
 
   void _onSearchFieldSubmitted(_) {
-    /*locator.get<ScreenerCompaniesState>().notEmptySearchCompanies(
-        searchText: _getSearchText(),
-        orderBy: _getSortingType(),
-        isNeedSaveSearch: true);
-    _scrollController.jumpTo(0);*/
+    eventsStream = EventsRepositoryModule.eventsRepository()
+        .readEvents(searchFieldText: _searchEventsController.text);
+    //_scrollController.jumpTo(0);
   }
 
   void _onSearchFieldCleared() {
-    /*locator
-        .get<ScreenerCompaniesState>()
-        .emptySearchCompanies(orderBy: _getSortingType());
-    _scrollController.jumpTo(0);*/
+    eventsStream = EventsRepositoryModule.eventsRepository()
+        .readEvents(searchFieldText: _searchEventsController.text);
+    //_scrollController.jumpTo(0);
   }
 }

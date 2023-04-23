@@ -1,14 +1,19 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:events_attendance/domain/model/event_item.dart';
 import 'package:events_attendance/presentation/global_widgets/custom_button.dart';
-import 'package:events_attendance/presentation/global_widgets/event_status_container.dart';
 import 'package:events_attendance/presentation/global_widgets/event_widgets.dart';
 import 'package:events_attendance/presentation/router/router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../utils/global_functions.dart';
+
 class EventContainer extends StatelessWidget {
+  final EventItem eventItem;
+
   const EventContainer({
     Key? key,
+    required this.eventItem,
   }) : super(key: key);
 
   @override
@@ -16,7 +21,9 @@ class EventContainer extends StatelessWidget {
     return CustomButton(
       onTap: () {
         AutoRouter.of(context).push(
-          const EventSingleRoute(),
+          EventSingleRoute(
+            eventItem: eventItem,
+          ),
         );
       },
       padding: EdgeInsets.symmetric(
@@ -31,21 +38,19 @@ class EventContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          EventWidgets.eventNameText(context),
+          EventWidgets.eventNameText(name: eventItem.name, context: context),
           SizedBox(
             height: 6.h,
           ),
-          EventWidgets.eventPlaceText(context),
+          EventWidgets.eventPlaceText(
+              location: eventItem.address, context: context),
           SizedBox(
             height: 10.h,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              EventWidgets.eventDateText(context),
-              const EventStatusContainer(),
-            ],
-          ),
+          EventWidgets.eventDateText(
+              date:
+                  '${GlobalFunctions.getFormattedDateString(eventItem.startDateTime)} - ${GlobalFunctions.getFormattedDateString(eventItem.endDateTime)}',
+              context: context),
         ],
       ),
     );

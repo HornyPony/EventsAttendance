@@ -75,7 +75,7 @@ abstract class AppTheme {
   static const basicSubStarColor = Color(0xFFE93147);
   static const deleteAccountColor = Color(0xFFD60000);
   static const advancedSubStarColor = Color(0xFFF99500);
-  static const allInclusiveSubStarColor = Color(0xFF07B021);
+  static const greenColor = Color(0xFF07B021);
   static const screenerGreyTextColor = Color(0xFF656D77);
   static const unFavoriteCompanyColor = Color(0xFFC7CDD4);
   static const unselectedBottomNavigationBarItemColor = Color(0xFF8695A7);

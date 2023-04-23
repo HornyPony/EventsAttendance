@@ -1,16 +1,22 @@
+import 'package:events_attendance/domain/model/event_item.dart';
 import 'package:events_attendance/presentation/global_widgets/custom_appbars.dart';
-import 'package:events_attendance/presentation/global_widgets/event_status_container.dart';
 import 'package:events_attendance/presentation/global_widgets/event_widgets.dart';
 import 'package:events_attendance/presentation/screens/event_single/parts/mark_attendance_btn.dart';
 import 'package:events_attendance/presentation/utils/app_icons.dart';
 import 'package:events_attendance/presentation/utils/dimensions.dart';
+import 'package:events_attendance/presentation/utils/global_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 class EventSingleScreen extends StatelessWidget {
-  const EventSingleScreen({Key? key}) : super(key: key);
+  final EventItem eventItem;
+
+  const EventSingleScreen({
+    Key? key,
+    required this.eventItem,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +42,15 @@ class EventSingleScreen extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(child: EventWidgets.eventNameText(context),),
-                            const EventStatusContainer(),
-                          ],
+                        Flexible(
+                          child: EventWidgets.eventNameText(
+                              name: eventItem.name, context: context),
                         ),
-
                         _InfoWithIconRow(
-                          infoString: 'infoString',
+                          info: '${GlobalFunctions.getFormattedDateString(eventItem.startDateTime)}\n${GlobalFunctions.getFormattedDateString(eventItem.endDateTime)}',
                           svgIcon: SvgPicture.asset(
                             AppIcons.eventDate,
                             width: 14.w,
@@ -55,7 +58,7 @@ class EventSingleScreen extends StatelessWidget {
                           ),
                         ),
                         _InfoWithIconRow(
-                          infoString: 'infoString',
+                          info: eventItem.address,
                           svgIcon: SvgPicture.asset(
                             AppIcons.eventPlace,
                             width: 10.w,
@@ -66,20 +69,28 @@ class EventSingleScreen extends StatelessWidget {
                           height: 10.h,
                         ),
                         Text(
-                          'В день рождения университета, 5 марта в 12:00 на площади КСК «КАИ Олимп» (ул.Чистопольская, 65а), КАИсты соберутся на «Спортивный день». Для студентов и коллектива пройдет юбилейный флешмоб «КАИ 90», «шоу дронов», спортивные состязания, конкурс «Мисс Весна», кроме того, на площадке будет работать зона КАИ-арт, где любой желающий сможет оставить пожелания вузу.',
-                          style:
-                              Theme.of(context).textTheme.displayLarge!.copyWith(
-                                    fontSize: 14.sp,
-                                  ),
+                          eventItem.description,
+                          textAlign: TextAlign.start,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge!
+                              .copyWith(
+                                fontSize: 14.sp,
+                              ),
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              const Align(
+              Align(
                 alignment: Alignment.bottomCenter,
-                child: MarkAttendanceBtn(),
+                child: MarkAttendanceBtn(
+                  eventGeoPoint: eventItem.geoPoint,
+                  startDateTime: eventItem.startDateTime,
+                  endDateTime: eventItem.endDateTime,
+                  eventId: eventItem.id,
+                ),
               ),
             ],
           ),
@@ -91,12 +102,12 @@ class EventSingleScreen extends StatelessWidget {
 
 class _InfoWithIconRow extends StatelessWidget {
   final SvgPicture svgIcon;
-  final String infoString;
+  final String info;
 
   const _InfoWithIconRow({
     Key? key,
-    required this.infoString,
     required this.svgIcon,
+    required this.info,
   }) : super(key: key);
 
   @override
@@ -104,6 +115,7 @@ class _InfoWithIconRow extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 6.h),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: 16.w,
@@ -113,7 +125,9 @@ class _InfoWithIconRow extends StatelessWidget {
           SizedBox(
             width: 6.w,
           ),
-          Flexible(child: EventWidgets.eventPlaceText(context)),
+          Flexible(
+              child: EventWidgets.eventPlaceText(
+                  context: context, location: info)),
         ],
       ),
     );

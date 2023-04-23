@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract class EventWidgets{
-  static Widget eventNameText(BuildContext context){
+  static Widget eventNameText({required BuildContext context, required String name,}){
     return Text(
-      'День рождения КАИ День рождения КАИДень рождения КАИ',
+      name,
       style: Theme.of(context).textTheme.headlineMedium!.copyWith(
         fontSize: 16.sp,
       ),
     );
   }
 
-  static Widget eventPlaceText(BuildContext context){
+  static Widget eventPlaceText({required BuildContext context, required String location}){
     return Text(
-      'КСК «КАИ ОЛИМП» - Чистопольская, 65А Чистопольская, 65А Чистопольская, 65А',
+      location,
       style: Theme.of(context).textTheme.displayLarge!.copyWith(
         fontSize: 12.sp,
       ),
     );
   }
 
-  static Widget eventDateText(BuildContext context){
+  static Widget eventDateText({required BuildContext context, required String date,}){
     return Text(
-      '02.03.2023, 10:00',
+      date,
       style: Theme.of(context).textTheme.displayLarge!.copyWith(
         fontSize: 11.sp,
       ),

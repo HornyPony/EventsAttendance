@@ -2,8 +2,9 @@
   "events": "Events",
   "profile": "Profile",
   "app_title": "Events\nAttendance",
-  "auth_email": "BlackBoard Email",
+  "auth_email": "BlackBoard Login",
   "auth_password": "BlackBoard Password",
   "sign_in": "Sign In",
-  "search_events_hint_text": "Search by name, place or date"
+  "search_events_hint_text": "Search by name, place or date",
+  "auth_error": "Username or password entered incorrectly"
 }

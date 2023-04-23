@@ -2,8 +2,9 @@
   "events": "Мероприятия",
   "profile": "Профиль",
   "app_title": "Посещение\nмероприятий",
-  "auth_email": "BlackBoard почта",
+  "auth_email": "BlackBoard логин",
   "auth_password": "BlackBoard пароль",
   "sign_in": "Войти",
-  "search_events_hint_text": "Поиск по названию, месту или дате мероприятия"
+  "search_events_hint_text": "Поиск по названию, месту или дате мероприятия",
+  "auth_error": "Логин или пароль введены неверно"
 }

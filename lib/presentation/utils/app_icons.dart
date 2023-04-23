@@ -10,4 +10,6 @@ class AppIcons {
   static const search = 'assets/icons/search.svg';
   static const eventDate = 'assets/icons/event_date.svg';
   static const eventPlace = 'assets/icons/event_place.svg';
+  static const textfieldError = 'assets/icons/textfield_error.svg';
+  static const message = 'assets/icons/message.svg';
 }

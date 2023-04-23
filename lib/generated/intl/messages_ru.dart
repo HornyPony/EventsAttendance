@@ -24,7 +24,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "app_title":
             MessageLookupByLibrary.simpleMessage("Посещение\nмероприятий"),
-        "auth_email": MessageLookupByLibrary.simpleMessage("BlackBoard почта"),
+        "auth_email": MessageLookupByLibrary.simpleMessage("BlackBoard логин"),
+        "auth_error": MessageLookupByLibrary.simpleMessage(
+            "Логин или пароль введены неверно"),
         "auth_password":
             MessageLookupByLibrary.simpleMessage("BlackBoard пароль"),
         "events": MessageLookupByLibrary.simpleMessage("Мероприятия"),

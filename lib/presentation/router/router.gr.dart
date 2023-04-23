@@ -13,18 +13,25 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i7;
 import 'package:auto_route/empty_router_widgets.dart' as _i3;
+import 'package:flutter/cupertino.dart' as _i11;
 import 'package:flutter/material.dart' as _i8;
 
-import '../navigator.dart' as _i9;
+import '../../domain/model/event_item.dart' as _i12;
+import '../navigator.dart' as _i10;
 import '../screens/event_single/event_single_screen.dart' as _i6;
 import '../screens/events/events_screen.dart' as _i5;
 import '../screens/home/home_screen.dart' as _i2;
 import '../screens/login/login_screen.dart' as _i1;
 import '../screens/profile/profile_screen.dart' as _i4;
+import 'auth_guard.dart' as _i9;
 
 class AppRouter extends _i7.RootStackRouter {
-  AppRouter([_i8.GlobalKey<_i8.NavigatorState>? navigatorKey])
-      : super(navigatorKey);
+  AppRouter({
+    _i8.GlobalKey<_i8.NavigatorState>? navigatorKey,
+    required this.authGuard,
+  }) : super(navigatorKey);
+
+  final _i9.AuthGuard authGuard;
 
   @override
   final Map<String, _i7.PageFactory> pagesMap = {
@@ -32,7 +39,7 @@ class AppRouter extends _i7.RootStackRouter {
       return _i7.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i1.LoginScreen(),
-        transitionsBuilder: _i9.CustomNavigationTransistor.fade,
+        transitionsBuilder: _i10.CustomNavigationTransistor.fade,
         durationInMilliseconds: 200,
         opaque: true,
         barrierDismissible: false,
@@ -42,7 +49,7 @@ class AppRouter extends _i7.RootStackRouter {
       return _i7.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i2.HomeScreen(),
-        transitionsBuilder: _i9.CustomNavigationTransistor.fade,
+        transitionsBuilder: _i10.CustomNavigationTransistor.fade,
         durationInMilliseconds: 200,
         opaque: true,
         barrierDismissible: false,
@@ -52,7 +59,7 @@ class AppRouter extends _i7.RootStackRouter {
       return _i7.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i3.EmptyRouterPage(),
-        transitionsBuilder: _i9.CustomNavigationTransistor.fade,
+        transitionsBuilder: _i10.CustomNavigationTransistor.fade,
         durationInMilliseconds: 200,
         opaque: true,
         barrierDismissible: false,
@@ -62,7 +69,7 @@ class AppRouter extends _i7.RootStackRouter {
       return _i7.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i4.ProfileScreen(),
-        transitionsBuilder: _i9.CustomNavigationTransistor.fade,
+        transitionsBuilder: _i10.CustomNavigationTransistor.fade,
         durationInMilliseconds: 200,
         opaque: true,
         barrierDismissible: false,
@@ -72,17 +79,21 @@ class AppRouter extends _i7.RootStackRouter {
       return _i7.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i5.EventsScreen(),
-        transitionsBuilder: _i9.CustomNavigationTransistor.fade,
+        transitionsBuilder: _i10.CustomNavigationTransistor.fade,
         durationInMilliseconds: 200,
         opaque: true,
         barrierDismissible: false,
       );
     },
     EventSingleRoute.name: (routeData) {
+      final args = routeData.argsAs<EventSingleRouteArgs>();
       return _i7.CustomPage<dynamic>(
         routeData: routeData,
-        child: const _i6.EventSingleScreen(),
-        transitionsBuilder: _i9.CustomNavigationTransistor.fade,
+        child: _i6.EventSingleScreen(
+          key: args.key,
+          eventItem: args.eventItem,
+        ),
+        transitionsBuilder: _i10.CustomNavigationTransistor.fade,
         durationInMilliseconds: 200,
         opaque: true,
         barrierDismissible: false,
@@ -95,6 +106,7 @@ class AppRouter extends _i7.RootStackRouter {
         _i7.RouteConfig(
           LoginRoute.name,
           path: '/',
+          guards: [authGuard],
         ),
         _i7.RouteConfig(
           HomeRoute.name,
@@ -193,12 +205,34 @@ class EventsRoute extends _i7.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i6.EventSingleScreen]
-class EventSingleRoute extends _i7.PageRouteInfo<void> {
-  const EventSingleRoute()
-      : super(
+class EventSingleRoute extends _i7.PageRouteInfo<EventSingleRouteArgs> {
+  EventSingleRoute({
+    _i11.Key? key,
+    required _i12.EventItem eventItem,
+  }) : super(
           EventSingleRoute.name,
           path: 'event_single',
+          args: EventSingleRouteArgs(
+            key: key,
+            eventItem: eventItem,
+          ),
         );
 
   static const String name = 'EventSingleRoute';
+}
+
+class EventSingleRouteArgs {
+  const EventSingleRouteArgs({
+    this.key,
+    required this.eventItem,
+  });
+
+  final _i11.Key? key;
+
+  final _i12.EventItem eventItem;
+
+  @override
+  String toString() {
+    return 'EventSingleRouteArgs{key: $key, eventItem: $eventItem}';
+  }
 }

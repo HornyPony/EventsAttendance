@@ -46,7 +46,6 @@ class PasswordTextField extends StatelessWidget {
   final bool isShowPassword;
   final bool isValid;
   final VoidCallback toggleVisibility;
-  final String? Function(String?)? validator;
 
   const PasswordTextField({
     Key? key,
@@ -54,7 +53,6 @@ class PasswordTextField extends StatelessWidget {
     required this.isShowPassword,
     required this.isValid,
     required this.toggleVisibility,
-    required this.validator,
   }) : super(key: key);
 
   @override
@@ -78,7 +76,6 @@ class PasswordTextField extends StatelessWidget {
           toggleVisibility: toggleVisibility,
           context: context,
         ),
-        validator: validator,
       ),
     );
   }

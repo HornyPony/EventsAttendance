@@ -41,11 +41,8 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _WScaleAnimation(
-    onTap: () {
-      if(!disabled){
-        onTap();
-      }
-    },
+    onTap: onTap,
+    disabled: disabled,
     onLongPress: onLongPress,
     child: Container(
       width: width,
@@ -118,7 +115,7 @@ class _WScaleAnimationState extends State<_WScaleAnimation>
   @override
   Widget build(BuildContext context) => GestureDetector(
     behavior: HitTestBehavior.opaque,
-    onTap: widget.disabled ? () {} : widget.onTap,
+    onTap: widget.disabled ? null : widget.onTap,
     onLongPress: widget.disabled ? () {} : widget.onLongPress,
     onPanDown: (details) => widget.disabled ? () {} : _controller.forward(),
     onPanCancel: () => widget.disabled ? () {} : _controller.reverse(),
