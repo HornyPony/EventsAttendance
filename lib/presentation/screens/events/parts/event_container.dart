@@ -49,7 +49,7 @@ class EventContainer extends StatelessWidget {
           ),
           EventWidgets.eventDateText(
               date:
-                  '${GlobalFunctions.getFormattedDateString(eventItem.startDateTime)} - ${GlobalFunctions.getFormattedDateString(eventItem.endDateTime)}',
+                  '${GlobalFunctions.getFormattedDateTimeString(eventItem.startDateTime)} - ${GlobalFunctions.getFormattedDateTimeString(eventItem.endDateTime)}',
               context: context),
         ],
       ),

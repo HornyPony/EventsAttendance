@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:events_attendance/generated/l10n.dart';
 import 'package:events_attendance/presentation/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +8,7 @@ class CurrentLocationDialog extends StatelessWidget {
   final String currentAddress;
   final int minutesBetweenMarkTime;
   final bool isLeaving;
+  final bool isCorrectDevice;
   final double distanceToEvent;
   final String eventId;
   final DateTime currentTime;
@@ -16,6 +18,7 @@ class CurrentLocationDialog extends StatelessWidget {
     Key? key,
     required this.currentAddress,
     required this.minutesBetweenMarkTime,
+    required this.isCorrectDevice,
     required this.distanceToEvent,
     required this.eventId,
     required this.currentTime,
@@ -26,8 +29,10 @@ class CurrentLocationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isUserFarFromEvent = distanceToEvent > 50;
-    final bool isLate = !isLeaving && minutesBetweenMarkTime < -30;
+    final bool isLate = minutesBetweenMarkTime < -30;
     final bool isEarly = minutesBetweenMarkTime > 30;
+
+    print(minutesBetweenMarkTime);
 
     return Dialog(
       insetPadding: EdgeInsets.zero,
@@ -52,7 +57,7 @@ class CurrentLocationDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _getTitle(),
+                      _getTitle(context),
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                             fontSize: 20.sp,
                             color: Theme.of(context).primaryColor,
@@ -62,28 +67,28 @@ class CurrentLocationDialog extends StatelessWidget {
                     SizedBox(
                       height: 10.h,
                     ),
-                    _getText(
-                      title: 'Вы находитесь здесь:',
+                    _getSectionText(
+                      title: S.of(context).user_location,
                       info: currentAddress,
                       context: context,
                     ),
                     SizedBox(
                       height: 10.h,
                     ),
-                    _getText(
-                      title: 'Расстояние до мероприятия:',
+                    _getSectionText(
+                      title: S.of(context).event_distance,
                       info:
-                          '${distanceToEvent.toStringAsFixed(2.truncateToDouble() == 2 ? 0 : 1)} м',
+                          '${distanceToEvent.toStringAsFixed(2.truncateToDouble() == 2 ? 0 : 1)} ${S.of(context).meter_short}',
                       context: context,
                     ),
                     SizedBox(
                       height: 10.h,
                     ),
-                    _getText(
+                    _getSectionText(
                       title: _getTimeBetweenMarkTimeTitle(
-                          minutesBetweenMarkTime, isLeaving),
+                          minutesBetweenMarkTime, isLeaving, context),
                       info: _getFormattedTimeBetweenMarkTime(
-                          minutesBetweenMarkTime),
+                          minutesBetweenMarkTime, context),
                       context: context,
                     ),
                   ],
@@ -92,11 +97,13 @@ class CurrentLocationDialog extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isUserFarFromEvent || isLate || isEarly
+                  onPressed: isUserFarFromEvent || isLate || isEarly || !isCorrectDevice
                       ? null
                       : () async {
                           await onBtnPressed();
-                          AutoRouter.of(context).pop();
+                          if(context.mounted){
+                            AutoRouter.of(context).pop();
+                          }
                         },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
@@ -116,11 +123,13 @@ class CurrentLocationDialog extends StatelessWidget {
                     _getBtnText(
                       isUserFarFromEvent: isUserFarFromEvent,
                       isEarly: isEarly,
+                      isLate: isLate,
+                      context: context,
                     ),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displayMedium!.copyWith(
                           fontSize: 14.sp,
-                          color: isUserFarFromEvent || isEarly
+                          color: isUserFarFromEvent || isEarly || !isCorrectDevice || isLate
                               ? Theme.of(context).colorScheme.secondary
                               : Colors.white,
                         ),
@@ -134,7 +143,7 @@ class CurrentLocationDialog extends StatelessWidget {
     );
   }
 
-  Widget _getText(
+  Widget _getSectionText(
       {required String title,
       required String info,
       required BuildContext context}) {
@@ -157,13 +166,13 @@ class CurrentLocationDialog extends StatelessWidget {
     );
   }
 
-  String _getTitle() {
+  String _getTitle(BuildContext context) {
     String title = Constants.nullStringValue;
 
     if (isLeaving) {
-      title = 'Отметка об уходе';
+      title = S.of(context).mark_leave;
     } else {
-      title = 'Отметка о приходе';
+      title = S.of(context).mark_visit;
     }
 
     return title.toUpperCase();
@@ -172,54 +181,67 @@ class CurrentLocationDialog extends StatelessWidget {
   String _getBtnText({
     required bool isUserFarFromEvent,
     required bool isEarly,
+    required bool isLate,
+    required BuildContext context,
+
   }) {
-    print(minutesBetweenMarkTime);
     String btnText = '';
-    if (isUserFarFromEvent) {
-      btnText = 'Вы находитесь далеко от мероприятия';
+    if (!isCorrectDevice) {
+      btnText = S.of(context).check_in_from_ur_device;
+    } else if (isUserFarFromEvent) {
+      btnText = S.of(context).long_distance;
     } else if (isEarly) {
-      btnText = 'Подождите еще ${minutesBetweenMarkTime.abs() - 30} мин.';
+      btnText =
+          '${S.of(context).wait} ${minutesBetweenMarkTime.abs() - 30} ${S.of(context).minutes_short}';
+    } else if (isLate) {
+      btnText = '${S.of(context).user_visit_late} ${minutesBetweenMarkTime.abs() - 30} ${S.of(context).minutes_short}';
     } else {
       if (isLeaving) {
-        btnText = 'Я ухожу';
+        btnText = S.of(context).user_leave;
       } else {
-        btnText = 'Я пришел';
+        btnText = S.of(context).user_visit;
       }
     }
     return btnText;
   }
 
   String _getTimeBetweenMarkTimeTitle(
-      int minutesBetweenMarkTime, bool isLeaving) {
+      int minutesBetweenMarkTime, bool isLeaving, BuildContext context) {
     String title = '';
     if (isLeaving) {
       if (!minutesBetweenMarkTime.isNegative) {
-        title = 'Вы уходите раньше на:';
+        title = S.of(context).user_leave_early;
       } else {
-        title = 'Вы задержались на:';
+        title = S.of(context).user_leave_late;
       }
     } else {
       if (minutesBetweenMarkTime.isNegative) {
-        title = 'Вы опоздали на:';
+        title = S.of(context).user_visit_late;
       } else {
-        title = 'До начала мероприятия:';
+        title = S.of(context).user_visit_early;
       }
     }
 
     return title;
   }
 
-  String _getFormattedTimeBetweenMarkTime(int minutesBetweenMarkTime) {
+  String _getFormattedTimeBetweenMarkTime(
+    int minutesBetweenMarkTime,
+    BuildContext context,
+  ) {
     String timeBetweenMarkTime = '';
 
     final int minutesBetweenMarkTimeAbs = minutesBetweenMarkTime.abs();
 
     if (minutesBetweenMarkTimeAbs >= 1440) {
-      timeBetweenMarkTime = '${minutesBetweenMarkTimeAbs ~/ 1440} дн.';
+      timeBetweenMarkTime =
+          '${minutesBetweenMarkTimeAbs ~/ 1440} ${S.of(context).days_short}';
     } else if (minutesBetweenMarkTimeAbs >= 60) {
-      timeBetweenMarkTime = '${minutesBetweenMarkTimeAbs ~/ 60} ч.';
+      timeBetweenMarkTime =
+          '${minutesBetweenMarkTimeAbs ~/ 60} ${S.of(context).hours_short}';
     } else {
-      timeBetweenMarkTime = '$minutesBetweenMarkTimeAbs мин.';
+      timeBetweenMarkTime =
+          '$minutesBetweenMarkTimeAbs ${S.of(context).minutes_short}';
     }
 
     return timeBetweenMarkTime;

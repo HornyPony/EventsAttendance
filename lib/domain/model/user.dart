@@ -1,6 +1,8 @@
+import 'package:events_attendance/domain/model/device.dart';
 import 'package:events_attendance/domain/model/user_shared_preferences.dart';
 import 'package:events_attendance/domain/state/user_state.dart';
 import 'package:events_attendance/get_it.dart';
+import 'package:events_attendance/internal/dependencies/firebase_user_repository_module.dart';
 import 'package:events_attendance/internal/dependencies/get_user_repository_module.dart';
 
 class User {
@@ -15,6 +17,7 @@ class User {
   final String instName;
   final String kafName;
   final String zachetkaNumber;
+  Device? device;
 
   User({
     required this.login,
@@ -28,6 +31,7 @@ class User {
     required this.instName,
     required this.kafName,
     required this.zachetkaNumber,
+    this.device,
   });
 
   static Future<void> setUser() async {
@@ -39,8 +43,10 @@ class User {
         login: savedUserLogin,
         password: savedUserPassword,
       );
+      Device userDevice = await FirebaseUserRepositoryModule.getUserRepository()
+          .getUserDeviceInfo(login: user.login);
+      user.device = userDevice;
       locator.get<UserState>().setUser(user);
     }
-
   }
 }

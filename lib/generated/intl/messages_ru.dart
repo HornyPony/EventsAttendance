@@ -29,10 +29,45 @@ class MessageLookup extends MessageLookupByLibrary {
             "Логин или пароль введены неверно"),
         "auth_password":
             MessageLookupByLibrary.simpleMessage("BlackBoard пароль"),
+        "change": MessageLookupByLibrary.simpleMessage("изменить"),
+        "check_in_from_ur_device": MessageLookupByLibrary.simpleMessage(
+            "Отмечайтесь со своего устройства"),
+        "days_short": MessageLookupByLibrary.simpleMessage("дн."),
+        "event_attended":
+            MessageLookupByLibrary.simpleMessage("Спасибо, что посетили!"),
+        "event_attended_but_not_at_start": MessageLookupByLibrary.simpleMessage(
+            "Спасибо! Вы не отметились в начале"),
+        "event_distance":
+            MessageLookupByLibrary.simpleMessage("Расстояние до мероприятия:"),
         "events": MessageLookupByLibrary.simpleMessage("Мероприятия"),
+        "group_short": MessageLookupByLibrary.simpleMessage("гр."),
+        "hours_short": MessageLookupByLibrary.simpleMessage("ч."),
+        "long_distance": MessageLookupByLibrary.simpleMessage(
+            "Вы находитесь далеко от мероприятия"),
+        "mark_attendance": MessageLookupByLibrary.simpleMessage("Отметиться"),
+        "mark_leave": MessageLookupByLibrary.simpleMessage("Отметка об уходе"),
+        "mark_visit": MessageLookupByLibrary.simpleMessage("Отметка о приходе"),
+        "meter_short": MessageLookupByLibrary.simpleMessage("м"),
+        "minutes_short": MessageLookupByLibrary.simpleMessage("мин."),
         "profile": MessageLookupByLibrary.simpleMessage("Профиль"),
+        "rebind_after": MessageLookupByLibrary.simpleMessage(
+            "Сможете изменить устройство через:"),
         "search_events_hint_text": MessageLookupByLibrary.simpleMessage(
             "Поиск по названию, месту или дате мероприятия"),
-        "sign_in": MessageLookupByLibrary.simpleMessage("Войти")
+        "sign_in": MessageLookupByLibrary.simpleMessage("Войти"),
+        "user_device": MessageLookupByLibrary.simpleMessage("Ваше устройство"),
+        "user_leave": MessageLookupByLibrary.simpleMessage("Я ухожу"),
+        "user_leave_early":
+            MessageLookupByLibrary.simpleMessage("Вы уходите раньше на:"),
+        "user_leave_late":
+            MessageLookupByLibrary.simpleMessage("Вы задержались на:"),
+        "user_location":
+            MessageLookupByLibrary.simpleMessage("Вы находитесь здесь:"),
+        "user_visit": MessageLookupByLibrary.simpleMessage("Я пришел"),
+        "user_visit_early":
+            MessageLookupByLibrary.simpleMessage("До начала мероприятия:"),
+        "user_visit_late":
+            MessageLookupByLibrary.simpleMessage("Вы опоздали на:"),
+        "wait": MessageLookupByLibrary.simpleMessage("Подождите еще")
       };
 }

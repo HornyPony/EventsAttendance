@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:events_attendance/domain/model/attendance_item.dart';
 import 'package:events_attendance/domain/model/current_attendance_item.dart';
 import 'package:events_attendance/domain/state/user_state.dart';
+import 'package:events_attendance/generated/l10n.dart';
 import 'package:events_attendance/get_it.dart';
 import 'package:events_attendance/internal/dependencies/events_repository_module.dart';
 import 'package:events_attendance/presentation/global_widgets/custom_button.dart';
@@ -63,11 +67,14 @@ class _MarkAttendanceBtnState extends State<MarkAttendanceBtn> {
               if (!_isCheckedAtStart || !_isCheckedAtEnd) {
                 CurrentAttendanceItem attendanceItem =
                     await _determinePosition();
-                await _showFieldDescriptionDialog(
-                  context: context,
-                  eventId: widget.eventId,
-                  attendanceItem: attendanceItem,
-                );
+                if(context.mounted){
+                  await _showFieldDescriptionDialog(
+                    context: context,
+                    eventId: widget.eventId,
+                    attendanceItem: attendanceItem,
+                  );
+                }
+
               }
             },
             child: Container(
@@ -94,8 +101,6 @@ class _MarkAttendanceBtnState extends State<MarkAttendanceBtn> {
   }
 
   Color _getBtnColor() {
-    print('start: $_isCheckedAtStart');
-    print('end: $_isCheckedAtEnd');
     Color btnColor = Theme.of(context).primaryColor;
     if (_isCheckedAtStart && _isCheckedAtEnd) {
       btnColor = AppTheme.greenColor;
@@ -109,13 +114,13 @@ class _MarkAttendanceBtnState extends State<MarkAttendanceBtn> {
   }
 
   String _getBtnText() {
-    String btnText = 'Отметиться';
+    String btnText = S.of(context).mark_attendance;
     if (_isCheckedAtStart && _isCheckedAtEnd) {
-      btnText = 'Спасибо, что посетили!';
+      btnText = S.of(context).event_attended;
     } else if (!_isCheckedAtStart && _isCheckedAtEnd) {
-      btnText = 'Спасибо! Вы не отметились в начале';
+      btnText = S.of(context).event_attended_but_not_at_start;
     } else {
-      btnText = 'Отметиться';
+      btnText = S.of(context).mark_attendance;
     }
 
     return btnText;
@@ -195,43 +200,59 @@ class _MarkAttendanceBtnState extends State<MarkAttendanceBtn> {
     required CurrentAttendanceItem attendanceItem,
     required String eventId,
   }) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CurrentLocationDialog(
-          currentAddress: attendanceItem.currentAddress,
-          minutesBetweenMarkTime: attendanceItem.minutesBetweenMarkTime,
-          distanceToEvent: attendanceItem.distanceToEvent,
-          currentTime: attendanceItem.currentTime,
-          isLeaving: attendanceItem.isLeaving,
-          eventId: eventId,
-          onBtnPressed: () async {
-            if (!_isCheckedAtStart) {
-              _attendanceFuture = EventsRepositoryModule.eventsRepository()
-                  .attendEvent(
-                      eventId: eventId,
-                      login: locator.get<UserState>().user!.login,
-                      checkStartDateTime: !attendanceItem.isLeaving
-                          ? attendanceItem.currentTime
-                          : null,
-                      checkEndDateTime: attendanceItem.isLeaving
-                          ? attendanceItem.currentTime
-                          : null);
-            } else {
-              _attendanceFuture = EventsRepositoryModule.eventsRepository()
-                  .updateAttendance(
-                      eventId: eventId,
-                      login: locator.get<UserState>().user!.login,
-                      checkStartDateTime: null,
-                      checkEndDateTime: attendanceItem.isLeaving
-                          ? attendanceItem.currentTime
-                          : null);
-            }
-            setState(() {});
-          },
-        );
-      },
-    );
+    final String deviceToken;
+
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      deviceToken = iosDeviceInfo.identifierForVendor!;
+    } else {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      deviceToken = androidDeviceInfo.id;
+    }
+
+    if(context.mounted){
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CurrentLocationDialog(
+            isCorrectDevice: deviceToken == locator.get<UserState>().user!.device!.id,
+            currentAddress: attendanceItem.currentAddress,
+            minutesBetweenMarkTime: attendanceItem.minutesBetweenMarkTime,
+            distanceToEvent: attendanceItem.distanceToEvent,
+            currentTime: attendanceItem.currentTime,
+            isLeaving: attendanceItem.isLeaving,
+            eventId: eventId,
+            onBtnPressed: () async {
+              if (!_isCheckedAtStart) {
+                _attendanceFuture = EventsRepositoryModule.eventsRepository()
+                    .attendEvent(
+                    eventId: eventId,
+                    login: locator.get<UserState>().user!.login,
+                    checkStartDateTime: !attendanceItem.isLeaving
+                        ? attendanceItem.currentTime
+                        : null,
+                    checkEndDateTime: attendanceItem.isLeaving
+                        ? attendanceItem.currentTime
+                        : null);
+              } else {
+                _attendanceFuture = EventsRepositoryModule.eventsRepository()
+                    .updateAttendance(
+                    eventId: eventId,
+                    login: locator.get<UserState>().user!.login,
+                    checkStartDateTime: null,
+                    checkEndDateTime: attendanceItem.isLeaving
+                        ? attendanceItem.currentTime
+                        : null);
+              }
+              setState(() {});
+            },
+          );
+        },
+      );
+    }
+
+
   }
 
   int _getMinutesBefore({

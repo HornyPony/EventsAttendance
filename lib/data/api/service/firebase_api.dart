@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:events_attendance/data/api/model/api_attendance.dart';
+import 'package:events_attendance/data/api/model/api_device.dart';
 import 'package:events_attendance/data/api/model/api_event.dart';
 import 'package:events_attendance/data/api/request/attend_event.dart';
 import 'package:events_attendance/data/api/request/firebase_user.dart';
 import 'package:events_attendance/data/mapper/event_mapper.dart';
+import 'package:events_attendance/domain/model/device.dart';
 import 'package:events_attendance/domain/model/event_item.dart';
 import 'package:events_attendance/presentation/utils/map_keys.dart';
 
@@ -30,6 +32,7 @@ class FirebaseService {
         );
   }
 
+  ///User
   Future<bool> getIsUserExists({required String login}) async {
     final doc = await FirebaseFirestore.instance
         .collection(MapKeys.users)
@@ -49,6 +52,31 @@ class FirebaseService {
     await docUser.set(firebaseUserBody.toApi());
   }
 
+  Future<ApiDevice> getUserDeviceInfo({required String login}) async {
+    final doc = await FirebaseFirestore.instance
+        .collection(MapKeys.users)
+        .doc(login)
+        .get();
+
+
+    return ApiDevice.fromApi(doc.data() ?? {});
+  }
+
+  Future<ApiDevice> updateDevice({required FirebaseUserBody firebaseUserBody}) async {
+    final doc = FirebaseFirestore.instance
+        .collection(MapKeys.users)
+        .doc(firebaseUserBody.login);
+
+    await doc.update(firebaseUserBody.toApi());
+
+    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await doc.get();
+
+
+    return ApiDevice.fromApi(documentSnapshot.data() ?? {});
+
+  }
+
+  ///Events
   Future<ApiAttendance> attendEvent({required AttendEventBody attendEventBody}) async {
     final doc = FirebaseFirestore.instance
         .collection(MapKeys.visitors)

@@ -50,7 +50,7 @@ class EventSingleScreen extends StatelessWidget {
                               name: eventItem.name, context: context),
                         ),
                         _InfoWithIconRow(
-                          info: '${GlobalFunctions.getFormattedDateString(eventItem.startDateTime)}\n${GlobalFunctions.getFormattedDateString(eventItem.endDateTime)}',
+                          info: '${GlobalFunctions.getFormattedDateTimeString(eventItem.startDateTime)}\n${GlobalFunctions.getFormattedDateTimeString(eventItem.endDateTime)}',
                           svgIcon: SvgPicture.asset(
                             AppIcons.eventDate,
                             width: 14.w,

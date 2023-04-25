@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:events_attendance/domain/state/user_state.dart';
 import 'package:events_attendance/generated/l10n.dart';
+import 'package:events_attendance/get_it.dart';
 import 'package:events_attendance/presentation/router/router.gr.dart';
 import 'package:events_attendance/presentation/utils/app_icons.dart';
 import 'package:events_attendance/presentation/utils/theme.dart';
@@ -37,7 +39,10 @@ class HomeScreen extends StatelessWidget {
                   ),
                   child: BottomNavigationBar(
                     onTap: (int index) {
-                      tabsRouter.setActiveIndex(index);
+                      if(locator.get<UserState>().user != null){
+                        tabsRouter.setActiveIndex(index);
+
+                      }
                     },
                     currentIndex: tabsRouter.activeIndex,
                     selectedItemColor: Theme.of(context).primaryColor,

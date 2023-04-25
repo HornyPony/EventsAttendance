@@ -1,4 +1,5 @@
 import 'package:events_attendance/domain/model/event_item.dart';
+import 'package:events_attendance/generated/l10n.dart';
 import 'package:events_attendance/internal/dependencies/events_repository_module.dart';
 import 'package:events_attendance/presentation/global_widgets/custom_appbars.dart';
 import 'package:events_attendance/presentation/screens/events/parts/event_container.dart';
@@ -38,7 +39,7 @@ class _EventsScreenState extends State<EventsScreen> {
     return KeyboardDismisser(
       child: Scaffold(
         body: PseudoAppBarTextOnly(
-          title: 'Мероприятия',
+          title: S.of(context).events,
           screenBody: Column(
             children: [
               Padding(

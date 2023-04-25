@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:events_attendance/domain/model/user.dart';
 import 'package:events_attendance/domain/model/user_shared_preferences.dart';
 import 'package:events_attendance/generated/l10n.dart';
@@ -168,24 +171,32 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
                         .getIsUserExists(login: login);
 
                 if (!isUserExists) {
+                  final String deviceToken;
+                  final String deviceName;
+
+                  var deviceInfo = DeviceInfoPlugin();
+                  if (Platform.isIOS) {
+                    var iosDeviceInfo = await deviceInfo.iosInfo;
+                    deviceToken = iosDeviceInfo.identifierForVendor!;
+                    deviceName = iosDeviceInfo.name!;
+                  } else {
+                    var androidDeviceInfo = await deviceInfo.androidInfo;
+                    deviceToken = androidDeviceInfo.id;
+                    deviceName = androidDeviceInfo.model;
+                  }
+
                   await FirebaseUserRepositoryModule.getUserRepository()
-                      .createFirebaseUser(login: login, deviceToken: '1');
+                      .createFirebaseUser(login: login, deviceToken: deviceToken, deviceName: deviceName,);
                 }
                 UserSharedPreferences.setUserLogin(login);
                 UserSharedPreferences.setUserPassword(password);
+                await User.setUser();
 
                 if (context.mounted)
                   AutoRouter.of(context).replace(const HomeRoute());
               }
 
-              /*var deviceInfo = DeviceInfoPlugin();
-              if (Platform.isIOS) { // import 'dart:io'
-                var iosDeviceInfo = await deviceInfo.iosInfo;
-                print(iosDeviceInfo.identifierForVendor); // unique ID on iOS
-              } else if(Platform.isAndroid) {
-                var androidDeviceInfo = await deviceInfo.androidInfo;
-                print(androidDeviceInfo.id); // unique ID on Android
-              }*/
+
             },
             verticalPadding: 14,
             btnText: S.of(context).sign_in,

@@ -1,16 +1,14 @@
-import 'package:events_attendance/data/api/model/api_event.dart';
-import 'package:events_attendance/domain/model/event_item.dart';
+import 'package:events_attendance/data/api/model/api_device.dart';
+import 'package:events_attendance/domain/model/device.dart';
 
-class EventMapper {
-  static EventItem fromApi(ApiEvent apiEvent, String id,) {
-    return EventItem(
-      id: id,
-      name: apiEvent.name,
-      startDateTime: apiEvent.startDate,
-      endDateTime: apiEvent.endDate,
-      address: apiEvent.address,
-      geoPoint: apiEvent.geoPoint,
-      description: apiEvent.description,
+class DeviceMapper {
+  static Device fromApi(
+    ApiDevice apiDevice,
+  ) {
+    return Device(
+      id: apiDevice.deviceToken,
+      name: apiDevice.deviceName,
+      bindingDate: apiDevice.deviceBindingDate,
     );
   }
 }
