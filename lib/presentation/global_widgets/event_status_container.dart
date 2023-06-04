@@ -14,7 +14,7 @@ class EventStatusContainer extends StatelessWidget {
         horizontal: 8.w,
       ),
       decoration: BoxDecoration(
-        color: AppTheme.basicSubStarColor,
+        color: AppTheme.redColor,
         borderRadius: BorderRadius.circular(6.r,)
       ),
       child: Text(

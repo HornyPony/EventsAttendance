@@ -39,14 +39,20 @@ class User {
     String savedUserPassword = UserSharedPreferences.getSavedUserPassword();
 
     if (savedUserLogin.isNotEmpty && savedUserPassword.isNotEmpty) {
-      User user = await GetUserRepositoryModule.getUserRepository().getUserInfo(
+      User? user = await GetUserRepositoryModule.getUserRepository().getUserInfo(
         login: savedUserLogin,
         password: savedUserPassword,
       );
-      Device userDevice = await FirebaseUserRepositoryModule.getUserRepository()
-          .getUserDeviceInfo(login: user.login);
-      user.device = userDevice;
-      locator.get<UserState>().setUser(user);
+      try{
+        Device userDevice = await FirebaseUserRepositoryModule.getUserRepository()
+            .getUserDeviceInfo(login: user.login);
+        user.device = userDevice;
+        locator.get<UserState>().setUser(user);
+      } catch (e){
+        user = null;
+      }
+
+
     }
   }
 }

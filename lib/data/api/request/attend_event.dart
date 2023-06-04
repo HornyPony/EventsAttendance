@@ -16,8 +16,6 @@ class AttendEventBody {
 
   Map<String, dynamic> toApi() {
     return {
-      "eventId": eventId,
-      "login": login,
       "checkStartDateTime": checkStartDateTime,
       "checkEndDateTime": checkEndDateTime,
     };

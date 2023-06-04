@@ -30,7 +30,7 @@ class Application extends StatelessWidget {
             ],
             debugShowCheckedModeBanner: false,
             supportedLocales: S.delegate.supportedLocales,
-            title: 'RANKS',
+            title: 'EventsAttendance',
             theme: AppTheme.lightTheme(),
             routerDelegate: _appRouter.delegate(),
             routeInformationParser: _appRouter.defaultRouteParser(),

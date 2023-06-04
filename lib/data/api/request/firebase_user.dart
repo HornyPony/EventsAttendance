@@ -17,7 +17,6 @@ class FirebaseUserBody {
   Map<String, dynamic> toApi() {
     if(authTime != null) {
       return {
-        "login": login,
         "deviceToken": deviceToken,
         "deviceName": deviceName,
         "deviceBindingDate": deviceBindingDate,

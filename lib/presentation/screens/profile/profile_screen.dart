@@ -26,7 +26,8 @@ class ProfileScreen extends StatelessWidget {
             builder: (_) {
               final User user = locator.get<UserState>().user!;
               final daysAfterBindingDevice =
-                  user.device!.bindingDate.difference(DateTime.now()).inDays;
+                  user.device!.bindingDate.difference(DateTime.now()).inDays.abs();
+
 
               return Column(
                 children: [

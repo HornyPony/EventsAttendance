@@ -17,6 +17,7 @@ class EventsScreen extends StatefulWidget {
 }
 
 class _EventsScreenState extends State<EventsScreen> {
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchEventsController = TextEditingController();
   late Stream<List<EventItem>> eventsStream;
 
@@ -75,6 +76,7 @@ class _EventsScreenState extends State<EventsScreen> {
                       final List<EventItem> events = snapshot.data!;
 
                       return ListView.builder(
+                        controller: _scrollController,
                         itemCount: events.length,
                         padding: EdgeInsets.symmetric(
                           horizontal: CustomDimensions.screenHorizontalPadding,
@@ -88,7 +90,7 @@ class _EventsScreenState extends State<EventsScreen> {
                         },
                       );
                     } else {
-
+                      print(snapshot.data);
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
@@ -107,19 +109,27 @@ class _EventsScreenState extends State<EventsScreen> {
     setState(() {
       eventsStream = EventsRepositoryModule.eventsRepository()
           .readEvents(searchFieldText: _searchEventsController.text);
-      //_scrollController.jumpTo(0);
+      _scrollController.jumpTo(0);
     });
   }
 
   void _onSearchFieldSubmitted(_) {
-    eventsStream = EventsRepositoryModule.eventsRepository()
-        .readEvents(searchFieldText: _searchEventsController.text);
-    //_scrollController.jumpTo(0);
+    setState(() {
+      eventsStream = EventsRepositoryModule.eventsRepository()
+          .readEvents(searchFieldText: _searchEventsController.text);
+      _scrollController.jumpTo(0);
+
+    });
+
   }
 
   void _onSearchFieldCleared() {
-    eventsStream = EventsRepositoryModule.eventsRepository()
-        .readEvents(searchFieldText: _searchEventsController.text);
-    //_scrollController.jumpTo(0);
+    setState(() {
+      eventsStream = EventsRepositoryModule.eventsRepository()
+          .readEvents(searchFieldText: _searchEventsController.text);
+      _scrollController.jumpTo(0);
+
+    });
+
   }
 }
