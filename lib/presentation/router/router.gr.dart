@@ -106,6 +106,7 @@ class AppRouter extends _i7.RootStackRouter {
         _i7.RouteConfig(
           LoginRoute.name,
           path: '/',
+          meta: <String, dynamic>{'noResizeToAvoidBottomInset': true},
           guards: [authGuard],
         ),
         _i7.RouteConfig(

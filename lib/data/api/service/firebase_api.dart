@@ -12,15 +12,15 @@ import 'package:events_attendance/presentation/utils/map_keys.dart';
 class FirebaseService {
   ///FirebaseFirestore
   Stream<List<EventItem>> readEvents({required String searchFieldText}) {
-    print(searchFieldText);
+
+
 
     return FirebaseFirestore.instance
         .collection(MapKeys.events)
-        .where("name",
-            isGreaterThanOrEqualTo: searchFieldText,
-            isLessThanOrEqualTo: "$searchFieldText\uf7ff")
+        .where('name',
+        isGreaterThanOrEqualTo: searchFieldText,
+        isLessThanOrEqualTo: "$searchFieldText\uf7ff")
         .orderBy('name')
-        .orderBy('startDate', descending: true)
         .snapshots()
         .map(
           (eventSnapshot) {
@@ -36,7 +36,7 @@ class FirebaseService {
                     );
                   }
             )
-                .toList();
+                .toList()..sort((a, b) => b.startDateTime.compareTo(a.startDateTime));
           }
         );
   }

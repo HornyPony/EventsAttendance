@@ -17,7 +17,7 @@ class KaiService {
   Future<ApiUser> getUserInfo(
       {required UserDataBody userDataBody, required String login}) async {
     final response = await _dio.post(
-      '/Pipeline/GetStepResult?authToken=3e0d739e-4448-4603-934c-9267d1c0c10a',
+      '/Pipeline/GetStepResult?authToken=9a000633-2e05-47a5-b133-f5688ef25521',
       options: _getNoErrorResponsesOptions(),
       data: userDataBody.toApi(),
     );

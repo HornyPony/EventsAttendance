@@ -33,6 +33,9 @@ class EmailTextField extends StatelessWidget {
           isShowErrorText: isShowErrorText,
           context: context,
         ),
+        onChanged: (_){
+          print(MediaQuery.of(context).viewInsets.bottom);
+        },
         /*validator: FieldValidator.email(
           message: S.of(context).wrong_email_text,
         ),*/

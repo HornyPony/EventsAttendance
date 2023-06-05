@@ -46,7 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Вы находитесь далеко от мероприятия"),
         "mark_attendance": MessageLookupByLibrary.simpleMessage("Отметиться"),
         "mark_leave": MessageLookupByLibrary.simpleMessage("Отметка об уходе"),
-        "mark_visit": MessageLookupByLibrary.simpleMessage("Отметка о приходе"),
+        "mark_visit":
+            MessageLookupByLibrary.simpleMessage("Отметка о прибытии"),
         "meter_short": MessageLookupByLibrary.simpleMessage("м"),
         "minutes_short": MessageLookupByLibrary.simpleMessage("мин."),
         "profile": MessageLookupByLibrary.simpleMessage("Профиль"),

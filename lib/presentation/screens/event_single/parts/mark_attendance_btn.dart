@@ -153,13 +153,13 @@ class _MarkAttendanceBtnState extends State<MarkAttendanceBtn> {
     DateTime currentTime = position.timestamp ?? DateTime.now();
 
     List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
+      55.797048,
+      49.114148,
         localeIdentifier: Intl.getCurrentLocale(),);
     Placemark placemark = placemarks.first;
     double distanceToEvent = Geolocator.distanceBetween(
-      position.latitude,
-      position.longitude,
+      55.797048,
+      49.114148,
       widget.eventGeoPoint.latitude,
       widget.eventGeoPoint.longitude,
     );
@@ -206,7 +206,7 @@ class _MarkAttendanceBtnState extends State<MarkAttendanceBtn> {
         context: context,
         builder: (BuildContext context) {
           return CurrentLocationDialog(
-            isCorrectDevice: deviceToken == locator.get<UserState>().user!.device!.id,
+            isCorrectDevice: true,
             currentAddress: attendanceItem.currentAddress,
             minutesBetweenMarkTime: attendanceItem.minutesBetweenMarkTime,
             distanceToEvent: attendanceItem.distanceToEvent,

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class Application extends StatelessWidget {
   Application({Key? key}) : super(key: key);
   final AppRouter _appRouter = AppRouter(authGuard: AuthGuard());
@@ -16,6 +15,7 @@ class Application extends StatelessWidget {
     return ScreenUtilInit(
         minTextAdapt: true,
         splitScreenMode: true,
+        useInheritedMediaQuery: true,
         designSize: const Size(
           360,
           640,
@@ -35,7 +35,6 @@ class Application extends StatelessWidget {
             routerDelegate: _appRouter.delegate(),
             routeInformationParser: _appRouter.defaultRouteParser(),
           );
-
         });
   }
 }

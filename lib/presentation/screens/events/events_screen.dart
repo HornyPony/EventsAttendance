@@ -39,6 +39,7 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     return KeyboardDismisser(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: PseudoAppBarTextOnly(
           title: S.of(context).events,
           screenBody: Column(

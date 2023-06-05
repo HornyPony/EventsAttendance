@@ -25,13 +25,14 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).viewInsets.bottom);
     return KeyboardDismisser(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CustomExpandedScrollView.customScrollView(
           child: Column(
             children: [
-              Flexible(
-                flex: 4,
+              Expanded(
                 child: Container(
                   color: Theme.of(context).primaryColor,
                   child: Padding(
@@ -52,29 +53,29 @@ class LoginScreen extends StatelessWidget {
                         Text(
                           S.of(context).app_title,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                fontSize: 24.sp,
-                                color: Colors.white,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.displaySmall!.copyWith(
+                                    fontSize: 24.sp,
+                                    color: Colors.white,
+                                  ),
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              Flexible(
-                flex: 3,
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: CustomDimensions.screenHorizontalPadding,
+              Container(
+
+                color: Colors.white,
+                  padding: EdgeInsets.fromLTRB(
+                     CustomDimensions.screenHorizontalPadding,
+                    0,
+                    CustomDimensions.screenHorizontalPadding,
+                      MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: const _AuthFieldsPart(),
                 ),
-              ),
+
             ],
           ),
         ),
@@ -113,40 +114,38 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 8.h,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 8.h,
+            ),
+            Form(
+              key: _emailForm,
+              child: EmailTextField(
+                controller: _usernameController,
+                isValid: _isValidLoginPassword,
+                isShowErrorText: false,
               ),
-              Form(
-                key: _emailForm,
-                child: EmailTextField(
-                  controller: _usernameController,
-                  isValid: _isValidLoginPassword,
-                  isShowErrorText: false,
-                ),
+            ),
+            SizedBox(
+              height: 8.h,
+            ),
+            Form(
+              key: _passwordForm,
+              child: PasswordTextField(
+                controller: _passwordController,
+                isShowPassword: _isShowPassword,
+                isValid: _isValidLoginPassword,
+                toggleVisibility: _togglePasswordVisibility,
               ),
-              SizedBox(
-                height: 8.h,
+            ),
+            if (!_isValidLoginPassword)
+              InputFieldErrorText(
+                errorText: S.of(context).auth_error,
+                isBottomPadding: false,
               ),
-              Form(
-                key: _passwordForm,
-                child: PasswordTextField(
-                  controller: _passwordController,
-                  isShowPassword: _isShowPassword,
-                  isValid: _isValidLoginPassword,
-                  toggleVisibility: _togglePasswordVisibility,
-                ),
-              ),
-              if (!_isValidLoginPassword)
-                InputFieldErrorText(
-                  errorText: S.of(context).auth_error,
-                  isBottomPadding: false,
-                ),
-            ],
-          ),
+          ],
         ),
         SafeArea(
           child: ActionBtn(
@@ -155,11 +154,16 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
               final String password =
                   _getTrimmedString(_passwordController.text);
 
+              setState(() {
+                _isValidLoginPassword = true;
+              });
+
               final User user =
                   await GetUserRepositoryModule.getUserRepository().getUserInfo(
                 login: login,
                 password: password,
               );
+
 
               if (user.fio == Constants.nullStringValue) {
                 setState(() {
@@ -186,7 +190,11 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
                   }
 
                   await FirebaseUserRepositoryModule.getUserRepository()
-                      .createFirebaseUser(login: login, deviceToken: deviceToken, deviceName: deviceName,);
+                      .createFirebaseUser(
+                    login: login,
+                    deviceToken: deviceToken,
+                    deviceName: deviceName,
+                  );
                 }
                 UserSharedPreferences.setUserLogin(login);
                 UserSharedPreferences.setUserPassword(password);
@@ -195,8 +203,6 @@ class _AuthFieldsPartState extends State<_AuthFieldsPart> {
                 if (context.mounted)
                   AutoRouter.of(context).replace(const HomeRoute());
               }
-
-
             },
             verticalPadding: 14,
             btnText: S.of(context).sign_in,

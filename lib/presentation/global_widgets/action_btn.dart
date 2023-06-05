@@ -31,6 +31,7 @@ class ActionBtn extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: width,
+
         padding: EdgeInsets.symmetric(
           vertical: verticalPadding.h,
           horizontal: 25.w,

@@ -16,7 +16,8 @@ import 'package:events_attendance/presentation/screens/profile/profile_screen.da
     AutoRoute(
       path: '/',
       page: LoginScreen,
-      guards: [AuthGuard]
+        meta: {'noResizeToAvoidBottomInset': true},
+        guards: [AuthGuard]
     ),
     AutoRoute(
       path: 'home_screen',
